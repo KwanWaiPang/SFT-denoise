@@ -1,0 +1,86 @@
+{
+  "name": "[4.18]blurx4_sub_0.1_10" //  please remove "debug_" during training
+  , "tb_logger_dir": "sft_denoise_deblur_one"
+  , "use_tb_logger": true
+  , "model":"sr"
+  , "scale": 1
+  , "crop_scale": 0
+  , "gpu_ids": [1]
+//  , "init_type": "kaiming"
+//
+//  , "finetune_type": "sft_basic" //sft | basic
+//  , "init_norm_type": "zero"
+
+  , "datasets": {
+    "train": {
+      "name": "DIV2K"
+      , "mode": "LRMAT"
+      , "dataroot_HR": "/media/sdc/wpguan/BasicSR_datasets/sft_denoise_deblur/DIV2K800_bicLRx4_blur_residual_0.1to10"
+      , "dataroot_LR": "/media/sdc/wpguan/BasicSR_datasets/sft_denoise_deblur/DIV2K800_bicLRx4_blur_0.1to10"
+      , "subset_file": null
+      , "use_shuffle": true
+      , "n_workers": 8
+      , "batch_size": 16//24 // 16
+      , "HR_size": 96 // 128 | 192 | 96
+      ,"noise_gt":true
+      , "use_flip": true
+      , "use_rot": true
+      ,"phase": "train"
+      ,"scale": 1
+      ,"data_type": "img"
+    }
+//
+  , "val": {
+      "name": "val_set5_blur_6&6.5",
+      "mode": "LRMAT",
+      "dataroot_HR": "/media/sdc/wpguan/BasicSR_datasets/sft_denoise_deblur/Set5_bicLRx4_residual_blur_6&6.5/",
+      "dataroot_LR": "/media/sdc/wpguan/BasicSR_datasets/sft_denoise_deblur/Set5_bicLRx4_blur_6&6.5/",
+      "noise_gt":true,
+       "phase": "val",
+       "scale": 1,
+       "data_type": "img"
+    }
+  },
+
+    "path": {
+    "root": "/media/sdc/wpguan/zhangxinjie/sft_denoise_deblur_one",
+    "pretrain_model_G": null,
+    "experiments_root": "/media/sdc/wpguan/zhangxinjie/sft_deblur/experiments/subnetwork_X1_0_66",
+    "models": "/media/sdc/wpguan/zhangxinjie/sft_deblur/experiments/subnetwork_X1_0_66/models",
+    "log": "/media/sdc/wpguan/zhangxinjie/sft_deblur/experiments/subnetwork_X1_0_66",
+    "val_images": "/media/sdc/wpguan/zhangxinjie/sft_deblur/experiments/subnetwork_X1_0_66/val_images"
+  }
+
+  , "network_G": {
+    "which_model_G": "Blur_subnet", // RRDB_net | sr_resnet | modulate_sr_resnet
+    "mode": "CNA",
+    "norm_type": null,
+    "scale": 1,
+    "nf": 64,
+    "nb": 16,
+    "in_nc": 3,
+    "out_nc": 3,
+    "gc": 32,
+    "group": 1
+  }
+  , "train": {
+    "lr_G": 1e-4
+    , "lr_scheme": "MultiStepLR"
+    , "lr_steps": [500000]
+    , "lr_gamma": 0.1  //0.5
+    , "pixel_criterion": "l2"
+    , "pixel_criterion_reg": "tv"
+    , "pixel_weight": 1.0
+    , "val_freq": 1000
+    , "manual_seed": 0
+    , "niter": 1e7
+  }
+
+  , "logger": {
+    "print_freq": 100
+    , "save_checkpoint_freq": 1e3
+  },
+  "timestamp": "190405-180230",
+  "is_train": true,
+  "adabn": null
+}

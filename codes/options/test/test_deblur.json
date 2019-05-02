@@ -1,0 +1,47 @@
+{
+  "name": "test_SFT_denoise",
+  "suffix": null,
+  "model": "sr_sub", // sr_sub | sr,
+  "scale": 4,
+  "crop_scale": 4,
+  "gpu_ids": [ 3 ]
+  ,
+  "datasets": {
+    "test": {
+      "name": "val_set5_blur",
+      "mode": "LRHR",
+      "dataroot_HR": "/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5",
+      "dataroot_LR": "/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5_blur_bicLRx4/"
+    }
+  },
+  "path": {
+    "root": "/media/sdc/wpguan/zhangxinjie/sft_deblur/result",
+    "pretrain_model_G": "/media/sdc/wpguan/zhangxinjie/sft_deblur/experiments/[4.10]finetune_blur_sftlayer_s0.26_c0.16/models/530000_G.pth",
+    "pretrain_model_sub": "/media/sdc/wpguan/zhangxinjie/sft_deblur/experiments/[4.10]finetune_blur_sftlayer_s0.26_c0.16/models/530000_sub.pth"
+  }
+  ,
+ "network_G": {
+    "which_model_G": "modulate_sr_resnet",
+      "norm_type": "sft"  //null |"adaptive_conv_res"" 
+    , "mode": "CNA"
+    , "nf": 64
+    , "nb": 16
+    , "in_nc": 3
+    , "out_nc": 3
+    , "group": 1
+    , "gc":32
+    , "gate_conv_bias": true
+    ,"scale":4
+  },
+
+    "network_sub": {
+    "which_model_sub": "Blur_subnet",
+    "mode": "CNA",
+    "nf": 64,
+    "nb": 16,
+    "in_nc": 3,
+    "out_nc": 3,
+    "group": 1,
+    "down_scale":2
+  }
+}

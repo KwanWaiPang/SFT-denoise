@@ -1,0 +1,96 @@
+{
+  "name": "[4.10]finetune_blur_sftlayer_s0.26_c0.16" //  please remove "debug_" during training
+  , "tb_logger_dir": "sft_deblur"
+  , "use_tb_logger": true
+  , "model":"sr_sub"//"funtune_noise"
+  , "scale": 4
+  , "crop_scale": 4
+  , "gpu_ids": [3]
+//  , "init_type": "kaiming"
+//
+//  , "finetune_type": "sft_basic" //sft | basic
+//  , "init_norm_type": "zero"
+
+  , "datasets": {
+    "train": {
+      "name": "DIV2K"
+      , "mode": "LRHR"
+      , "dataroot_HR": "/media/sdc/wpguan/BasicSR_datasets/DIV2K800_sub"
+      , "dataroot_LR": "/media/sdc/wpguan/BasicSR_datasets/DIV2K800_sub_blur_bicLRx4"
+      , "subset_file": null
+      , "use_shuffle": true
+      , "n_workers": 8
+      , "batch_size": 16//24 // 16
+      , "HR_size": 96 // 128 | 192 | 96
+      //, "noise_gt": true
+      , "use_flip": true
+      , "use_rot": true
+    }
+//
+  , "val": {
+      "name": "val_set5_x4",
+      "mode": "LRHR",
+      "dataroot_HR": "/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5",
+      "dataroot_LR": "/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5_blur_bicLRx4",
+      "phase": "val",
+      "scale": 1,
+      "data_type": "img"
+    }
+
+  }
+
+  , "path": {
+   "root": "/media/sdc/wpguan/zhangxinjie/sft_deblur",
+    "pretrain_model_G": "/media/sdc/wpguan/zhangxinjie/sft_deblur/experiments/pretain/400000_G.pth",
+    "pretrain_model_sub": "/media/sdc/wpguan/zhangxinjie/sft_deblur/experiments/blur_sub_0.5_10/models/72000_G.pth",
+    "experiments_root": "/media/sdc/wpguan/zhangxinjie/sft_denoise/experiments/finetune_noiseestimation_sftlayer_15to66",
+    "models": "/media/sdc/wpguan/zhangxinjie/sft_denoise/experiments/finetune_noiseestimation_sftlayer_15to66/models",
+    "log": "/media/sdc/wpguan/zhangxinjie/sft_denoise/experiments/finetune_noiseestimation_sftlayer_15to66",
+    "val_images": "/media/sdc/wpguan/zhangxinjie/sft_denoise/experiments/finetune_noiseestimation_sftlayer_15to66/val_images"
+  }
+
+  , "network_G": {
+    "which_model_G": "modulate_sr_resnet" // RRDB_net | sr_resnet | modulate_sr_resnet
+    , "norm_type": "sft"  //null |"adaptive_conv_res"" 
+    , "mode": "CNA"
+    , "nf": 64
+    , "nb": 16
+    , "in_nc": 3
+    , "out_nc": 3
+    , "group": 1
+    , "gate_conv_bias": true
+  }
+
+  , "network_sub": {
+    "which_model_sub": "Blur_subnet", // RRDB_net | sr_resnet | modulate_denoise_resnet |noise_subnet
+    "mode": "CNA",
+    "nf": 64,
+    "nb": 16,
+    "in_nc": 3,
+    "out_nc": 3,
+    "group": 1,
+    "down_scale":2
+  }
+
+
+  , "train": {
+    "lr_G": 1e-4
+    , "lr_scheme": "MultiStepLR"
+    , "lr_steps": [200000,400000,600000,800000]
+    , "lr_gamma": 0.1 //0.5
+    , "pixel_criterion_basic": "l2"
+    , "pixel_criterion_noise": "l2"
+    , "pixel_criterion_reg_noise": "tv"
+    , "pixel_weight_basic": 1.0
+    , "pixel_weight_noise": 1.0
+    , "val_freq": 1e3
+    , "manual_seed": 0
+    , "niter": 1e7
+  }
+
+  , "logger": {
+    "print_freq": 100
+    , "save_checkpoint_freq": 1e3
+  }
+  
+}

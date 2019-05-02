@@ -1,0 +1,97 @@
+{
+  "name": "[4.24]finetune_three_noise66_blur_0.1to10_sftlayer" //  please remove "debug_" during training
+  , "tb_logger_dir": "funtune_noise_blur_three"
+  , "use_tb_logger": true
+  , "model":"sr_sub"//"funtune_noise"
+  , "scale": 1//4
+  , "crop_scale":0// 4
+  , "gpu_ids": [0]
+//  , "init_type": "kaiming"
+//
+ // , "finetune_type":"sft" //"sft_basic" //sft | basic
+//  , "init_norm_type": "zero"
+
+  , "datasets": {
+    "train": {
+      "name": "DIV2K"
+      , "mode": "LRHR"
+      , "dataroot_HR": "/media/sdc/wpguan/BasicSR_datasets/DIV2K800_sub"
+      , "dataroot_LR":"/media/sdc/wpguan/BasicSR_datasets/sft_denoise_deblur/DIV2K800_blur_0.1to10_noise66"// "/media/sdc/wpguan/BasicSR_datasets/DIV2K800_sub_bicLRx4_noise_66"
+      , "subset_file": null
+      , "use_shuffle": true
+      , "n_workers": 8
+      , "batch_size": 16//24 // 16
+      , "HR_size": 96 // 128 | 192 | 96
+      //, "noise_gt": true
+      , "use_flip": true
+      , "use_rot": true
+    }
+//
+  , "val": {
+      "name": "val_set5_noise33_blur_3&3.5",
+      "mode": "LRHR",
+      "dataroot_HR": "/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5",
+      "dataroot_LR":"/media/sdc/wpguan/BasicSR_datasets/sft_denoise_deblur/Set5_blur_6&6.5_noise33",// "/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5_sub_bicLRx4_noise_66/",
+      "phase": "val",
+      "scale": 1,//4,
+      "data_type": "img"
+    }
+
+  }
+
+  , "path": {
+   "root": "/media/sdc/wpguan/zhangxinjie/sft_denoise_deblur_three",
+    "pretrain_model_G": "/media/sdc/wpguan/zhangxinjie/sft_denoise_deblur_one/experiments/[4.17]basicmodel_blur_0.1to5_noise15/pretain_model/368000_G.pth",
+    "pretrain_model_sub": "/media/sdc/wpguan/zhangxinjie/sft_denoise_deblur_three/experiments/[4.17]noise66_blur_0.1to10_sub/models/873000_G.pth",
+    "experiments_root": "/media/sdc/wpguan/zhangxinjie/sft_denoise/experiments/finetune_noiseestimation_sftlayer_15to66",
+    "models": "/media/sdc/wpguan/zhangxinjie/sft_denoise/experiments/finetune_noiseestimation_sftlayer_15to66/models",
+    "log": "/media/sdc/wpguan/zhangxinjie/sft_denoise/experiments/finetune_noiseestimation_sftlayer_15to66",
+    "val_images": "/media/sdc/wpguan/zhangxinjie/sft_denoise/experiments/finetune_noiseestimation_sftlayer_15to66/val_images"
+  }
+
+  , "network_G": {
+    "which_model_G": "modulate_sr_resnet" // RRDB_net | sr_resnet | modulate_sr_resnet
+    , "norm_type": "sft"  //null |"adaptive_conv_res"" 
+    , "mode": "CNA"
+    , "nf": 64
+    , "nb": 16
+    , "in_nc": 3
+    , "out_nc": 3
+    , "group": 1
+    , "gate_conv_bias": true
+    ,"scale":1//4
+  }
+
+  , "network_sub": {
+    "which_model_sub": "Noise_subnet", // RRDB_net | sr_resnet | modulate_denoise_resnet |noise_subnet
+    "mode": "CNA",
+    "nf": 64,
+    "nb": 16,
+    "in_nc": 3,
+    "out_nc": 3,
+    "group": 1,
+    "down_scale":2
+  }
+
+
+  , "train": {
+    "lr_G": 1e-4
+    , "lr_scheme": "MultiStepLR"
+    , "lr_steps": [200000,400000,800000]
+    , "lr_gamma": 0.1 //0.5
+    , "pixel_criterion_basic": "l2"
+    , "pixel_criterion_noise": "l2"
+    , "pixel_criterion_reg_noise": "tv"
+    , "pixel_weight_basic": 1.0
+    , "pixel_weight_noise": 1.0
+    , "val_freq": 1e3
+    , "manual_seed": 0
+    , "niter": 1e7
+  }
+
+  , "logger": {
+    "print_freq": 100
+    , "save_checkpoint_freq": 1e3
+  }
+  
+}

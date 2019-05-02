@@ -1,0 +1,40 @@
+{
+  "name": "test_blur_basicmodelx4"
+  , "suffix": null
+  , "model": "sr"//"sr_sub" // sr_sub | sr
+  , "scale": 4//1
+  , "crop_scale":0// 4
+  , "gpu_ids": [3]
+
+  , "datasets": {
+     "test_1": {
+      "name": "val_set5_blur",
+      "mode": "LRHR",
+      "dataroot_HR": "/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5",
+      "dataroot_LR": "/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5_blur_bicLRx4/"
+    }
+    , "test_2": { // the 2nd test dataset
+      "name": "Set5_bicLRX4",
+      "mode": "LRHR",//"LR"//"LRHR"
+      "dataroot_HR": "/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5",
+      "dataroot_LR": "/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5_sub_bicLRx4/"
+    }
+  }
+
+  , "path": {
+    "root":"/media/sdc/wpguan/zhangxinjie/sft_deblur/result",//"/media/sdc/wpguan/zhangxinjie/sft_denoise/result",
+   "pretrain_model_G":"/media/sdc/wpguan/zhangxinjie/sft_deblur/experiments/basicmodex4/models/400000_G.pth"
+}
+  , "network_G": {
+    "which_model_G": "sr_resnet" // cond_denoise_resnet; denoise_resnet
+    , "norm_type": null
+    , "mode": "CNA"
+    , "nf": 64
+    , "nb": 16
+    , "in_nc": 3
+    , "out_nc": 3
+    , "gc": 32
+    , "group": 1
+  }
+
+}

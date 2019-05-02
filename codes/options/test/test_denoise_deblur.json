@@ -1,0 +1,60 @@
+{
+  "name":"test_funtune_noise_blur_one",//"test_funtune_noise_blur_two",// "test_SFT_denoise_c60_sublayer9",//"test_SFT_denoise66",
+  "suffix": null,
+  "model":"funtune_noise_blur",// "funtune_noise_blur_two", // sr_sub | sr,
+  "scale": 1,//4,//4,//1
+  "crop_scale":0,// 4,//1
+  "gpu_ids": [ 1 ]
+  ,
+  "datasets": {
+    "test": {
+      "name": "Set5_blur_6&6.5_noise33",
+      "mode": "LRHR",
+      "scale": 1,//4, //!!
+      "crop_scale":0,
+      "dataroot_HR":"/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5",//"/media/sdc/wpguan/BasicSR_datasets/RNI15/",//"/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5",//"/media/sdc/wpguan/BasicSR_datasets/RNI15/",//"/media/sdc/wpguan/BasicSR_datasets/RNI15/",//"/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5",
+      "dataroot_LR": "/media/sdc/wpguan/BasicSR_datasets/sft_denoise_deblur/Set5_blur_6&6.5_noise33/"//"/media/sdc/wpguan/BasicSR_datasets/sft_denoise/Set5_bicLRx4_noise_c30/"//"/media/sdc/wpguan/BasicSR_datasets/RNI15_bicLRx4/"//"/media/sdc/wpguan/BasicSR_datasets/RNI15/"//"/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5_blur_0.5_10_bicX4/"//"/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5_noise_66/"//"/media/sdc/wpguan/BasicSR_datasets/RNI15/"//"/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5_noise_66/"//"/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5_sub_bicLRx4_noise_66/"
+    }
+  },
+  "path": {
+    "root": "/media/sdc/wpguan/zhangxinjie/sft_denoise_deblur_one/result",//"/media/sdc/wpguan/zhangxinjie/sft_denoise_deblur_two/result",
+    "pretrain_model_G": "/media/sdc/wpguan/zhangxinjie/sft_denoise_deblur_one/experiments/finetune_noise66_blur_0.1to10_sftlayer/models/420000_G.pth",//"/media/sdc/wpguan/zhangxinjie/sft_denoise_deblur_two/experiments/[4.19]finetune_two_noise66_blur_0.1to10_sftlayer/models/330000_G.pth",//"/media/sdc/wpguan/zhangxinjie/paper_sft_denoise/experiments/[4.21]finetune_noise_c60_sublayer9/models/696000_G.pth",//"/media/sdc/wpguan/zhangxinjie/sft_denoise/experiments/[4.11]finetune_noise66_sftlayer/models/700000_G.pth",//"/media/sdc/wpguan/zhangxinjie/sft_denoise/experiments/[4.13]finetune_noise66_sftlayer_yuantu_2nd/models/209000_G.pth",
+    "pretrain_model_sub_noise":"/media/sdc/wpguan/zhangxinjie/sft_denoise_deblur_one/experiments/finetune_noise66_blur_0.1to10_sftlayer/models/420000_sub_noise.pth",//"/media/sdc/wpguan/zhangxinjie/sft_denoise_deblur_two/experiments/[4.19]finetune_two_noise66_blur_0.1to10_sftlayer/models/330000_sub_noise.pth", //"/media/sdc/wpguan/zhangxinjie/paper_sft_denoise/experiments/[4.21]finetune_noise_c60_sublayer9/models/696000_sub.pth"//"/media/sdc/wpguan/zhangxinjie/sft_denoise/experiments/[4.11]finetune_noise66_sftlayer/models/700000_sub.pth"//"/media/sdc/wpguan/zhangxinjie/sft_denoise/experiments/[4.13]finetune_noise66_sftlayer_yuantu_2nd/models/209000_sub.pth"
+    "pretrain_model_sub_blur":"/media/sdc/wpguan/zhangxinjie/sft_denoise_deblur_one/experiments/finetune_noise66_blur_0.1to10_sftlayer/models/420000_sub_blur.pth"//"/media/sdc/wpguan/zhangxinjie/sft_denoise_deblur_two/experiments/[4.19]finetune_two_noise66_blur_0.1to10_sftlayer/models/330000_sub_blur.pth"
+  }
+  ,
+ "network_G": {
+    "which_model_G":"modulate_sr_resnet_one" ,//"modulate_sr_resnet_two",
+      "norm_type": "sft"  //null |"adaptive_conv_res"" 
+    , "mode": "CNA"
+    , "nf": 64
+    , "nb": 16
+    , "in_nc": 3
+    , "out_nc": 3
+    , "group": 1
+    , "gc":32
+    , "gate_conv_bias": true
+    ,"scale":1//4
+  },
+
+    "network_sub": {
+    "which_model_sub": "Noise_subnet",
+    "mode": "CNA",
+    "nf": 64,
+    "nb": 16,
+    "in_nc": 3,
+    "out_nc": 3,
+    "group": 1,
+    "down_scale":2
+  }
+   , "network_sub2": {
+    "which_model_sub": "Blur_subnet", // RRDB_net | sr_resnet | modulate_denoise_resnet |noise_subnet
+    "mode": "CNA",
+    "nf": 64,
+    "nb": 16,
+    "in_nc": 3,
+    "out_nc": 3,
+    "group": 1,
+    "down_scale":2
+  }
+}

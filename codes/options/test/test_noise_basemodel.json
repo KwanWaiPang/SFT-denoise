@@ -1,0 +1,40 @@
+{
+  "name": "test_[4.23]basicmodel_noise15_RN15"
+  , "suffix": null
+  , "model": "sr"//"sr_sub" // sr_sub | sr
+  , "scale":4// 4//4//1
+  , "crop_scale":0// 4
+  , "gpu_ids": [3]
+
+  , "datasets": {
+     "test_1": {
+      "name": "RN15",//"noise_c8",
+      "mode": "LRHR",
+      "dataroot_HR": "/media/sdc/wpguan/BasicSR_datasets/RNI15/",//"/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5",
+      "dataroot_LR":"/media/sdc/wpguan/BasicSR_datasets/RNI15_bicLRx4/"//"/media/sdc/wpguan/BasicSR_datasets/sft_denoise/Set5_bicLRx4_noise_c8/"//"/media/sdc/wpguan/BasicSR_datasets/sft_denoise/Set5_bicLRx4_noise_c30/"// "/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5_sub_bicLRx4_noise_66/"
+    }
+  //  , "test_2": { // the 2nd test dataset
+  //    "name": "noise_c30",
+   //   "mode": "LRHR",//"LR"//"LRHR"
+    //  "dataroot_HR": "/media/sdc/wpguan/BasicSR_datasets/val_set5/Set5",
+   //   "dataroot_LR": "/media/sdc/wpguan/BasicSR_datasets/sft_denoise/Set5_bicLRx4_noise_c30/"//"/media/sdc/wpguan/BasicSR_datasets/RNI15_bicLRx4/"
+   // }
+  }
+
+  , "path": {
+    "root":"/media/sdc/wpguan/zhangxinjie/paper_sft_denoise/result",
+   "pretrain_model_G":"/media/sdc/wpguan/zhangxinjie/paper_sft_denoise/experiments/[4.23]basicmodelx4_noise_c15/models/686000_G.pth"//"/media/sdc/wpguan/zhangxinjie/paper_sft_denoise/experiments/[4.21]basicmodelx4_noise_c15/models/692000_G.pth"
+}
+  , "network_G": {
+    "which_model_G": "sr_resnet" // cond_denoise_resnet; denoise_resnet
+    , "norm_type": null
+    , "mode": "CNA"
+    , "nf": 64
+    , "nb": 16
+    , "in_nc": 3
+    , "out_nc": 3
+    , "gc": 32
+    , "group": 1
+  }
+
+}
